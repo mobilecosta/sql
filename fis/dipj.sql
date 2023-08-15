@@ -1,0 +1,13 @@
+select SUM(PRODUTO)
+  from
+(
+select top 50 SB1.B1_COD, SB1.B1_POSIPI, SB1.B1_DESC, 
+       SUM(SD2.D2_TOTAL + SD2.D2_VALFRE + SD2.D2_SEGURO + SD2.D2_DESPESA) as PRODUTO
+  from SD2010 SD2
+  join SB1010 SB1 on SB1.B1_FILIAL = '01' and SB1.D_E_L_E_T_ = ' ' and SB1.B1_COD = SD2.D2_COD 
+ where SD2.D2_FILIAL = '01' and SD2.D_E_L_E_T_ = ' ' and SD2.D2_EMISSAO between '20110101' and '20111231'
+    and SB1.B1_DESC LIKE '%PMS%'
+ group by SB1.B1_COD, SB1.B1_POSIPI, SB1.B1_DESC
+ order by SUM(SD2.D2_TOTAL + SD2.D2_VALFRE + SD2.D2_SEGURO + SD2.D2_DESPESA) desc
+) tab 
+ 

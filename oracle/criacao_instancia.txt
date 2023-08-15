@@ -1,0 +1,29 @@
+1)
+oradim -new -sid DEV -startmode m -intpwd DEV -syspwd DEV -pfile D:\oracle\product\10.2.0\admin\dev\pfile\init.ora
+
+2)
+sqlplus /nolog
+connect sys/sys as sysdba
+
+3)
+shutdown immediate
+
+4)
+startup nomount pfile=D:\oracle\product\10.2.0\admin\dev\pfile\init.ora
+
+5) 
+@d:\totvs\scripts\createdb.sql
+
+6) Criação do catalogo
+@?/rdbms/admin/catalog.sql
+@?/rdbms/admin/catproc.sql
+
+7) Criação do usuário
+
+CREATE USER PROTHEUS IDENTIFIED BY PROTHEUS DEFAULT TABLESPACE DADOSADV QUOTA UNLIMITED ON DADOSADV;
+GRANT create session, alter session, select_catalog_role, execute_catalog_role, create table, create procedure, create view, create materialized view, create trigger, create sequence, create any directory, create type, create synonym, administer database trigger TO PROTHEUS;
+
+GRANT DBA TO PROTHEUS WITH ADMIN OPTION;
+
+8)
+Regedit: Chave ORA_DEV_AUTOSTART para TRUE em HKEYLOCAL_MACHINE -> SOFTWARE -> ORACLE -> KEY_ORADB10G_HOME1

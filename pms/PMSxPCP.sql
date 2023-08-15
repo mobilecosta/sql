@@ -1,0 +1,83 @@
+use ZT8HTG_LAB;
+
+-- Exemplo de Produto
+select * from SC2010 where D_E_L_E_T_ = ' ' and C2_PRODUTO = 'CELROB000111A' order by C2_NUM
+
+-- Vinculo entre tarefas de projeto x ordem de produção
+select AFC_XOP, * from AFC010 where D_E_L_E_T_ = ' ' and AFC_XOP <> '' 
+   and not AFC_XOP in (select C2_NUM+C2_ITEM+C2_SEQUEN+C2_ITEMGRD from SC2010 where D_E_L_E_T_ = ' ');
+
+select * from AFC010 where D_E_L_E_T_ = ' ' and AFC_XOP <> '' 
+  and AFC_XOP in (select C2_NUM+C2_ITEM+C2_SEQUEN+C2_ITEMGRD from SC2010 where D_E_L_E_T_ = ' ');
+
+-- Agrupamento das ordens de produção por projeto
+use ZT8HTG_LAB;
+
+select Left(SC2.C2_OBS, PATINDEX('% %',C2_OBS) - 1) as AF8_PROJET, MIN(SC2.C2_NUM) AS C2_NUM_MIN, MAX(SC2.C2_NUM) AS C2_NUM_MAX, 
+       MIN(SC2.C2_EMISSAO) AS C2_EMISSAO,
+       SC2.C2_PRODUTO, MIN(AFC.AFC_XPROD) as AFC_XPROD, MIN(AFC.AFC_XOP) as AFC_XOP,
+       (SELECT COUNT(*) FROM AFC010 
+         WHERE D_E_L_E_T_ = ' ' AND AFC_PROJET = Left(SC2.C2_OBS, PATINDEX('% %',SC2.C2_OBS) - 1) 
+           AND AFC_EDT <> AFC_PROJET) AS TOTALEDT, COUNT(*) AS OCORRENCIAS
+ FROM SC2010 SC2
+ LEFT JOIN AFC010 AFC ON AFC.AFC_XOP = SC2.C2_NUM+SC2.C2_ITEM+SC2.C2_SEQUEN+SC2.C2_ITEMGRD AND AFC.D_E_L_E_T_ = ' '
+ where SC2.D_E_L_E_T_ = ' ' and LEFT(SC2.C2_OBS, 3) = 'PMS' AND SC2.C2_FILIAL <> 'XX'
+ group by Left(SC2.C2_OBS, PATINDEX('% %',SC2.C2_OBS) - 1), SC2.C2_PRODUTO
+having COUNT(*) > 1
+ order by SC2.C2_EMISSAO, Left(SC2.C2_OBS, PATINDEX('% %',SC2.C2_OBS) - 1), SC2.C2_PRODUTO;
+ 
+-- Estrutura do Produto
+SELECT * FROM SG1010 WHERE G1_COD = 'CELROB000111A' and D_E_L_E_T_ = ' ';
+
+-- Ordem de Produção
+select SC2.D_E_L_E_T_, SC2.C2_PRODUTO, SC2.C2_OBS, SC2.* 
+  from SC2010 SC2
+ where SC2.D_E_L_E_T_ = ' ' and Left(SC2.C2_OBS, PATINDEX('% %',SC2.C2_OBS) - 1) = 'PMS000211E'
+   AND NOT C2_NUM+C2_ITEM+C2_SEQUEN+C2_ITEMGRD IN (SELECT AFC_XOP FROM AFC010 WHERE D_E_L_E_T_ = ' ' AND AFC_PROJET =  Left(SC2.C2_OBS, PATINDEX('% %',SC2.C2_OBS) - 1) ) ;
+
+-- EDT Agrupada
+select AFC_XPROD, AFC_XOP, D_E_L_E_T_
+  from AFC010 where AFC_PROJET = 'PMS000211C'
+ GROUP BY AFC_XPROD, AFC_XOP, D_E_L_E_T_;
+
+-- EDT Individual
+select *
+  from AFC010 
+ where AFC_PROJET = 'PMS000211C' and D_E_L_E_T_ = ' ';
+
+-- Ocorrencias
+SELECT AFM_COD, D_E_L_E_T_ FROM AFM010 
+ WHERE AFM_PROJET = 'PMS000211C'
+ GROUP BY AFM_COD, D_E_L_E_T_;
+ 
+-- Novas ordens de produção
+SELECT * FROM SC2010 WHERE D_E_L_E_T_ = ' ' AND C2_EMISSAO = '20111006';
+
+Projeto: PMS005812A
+Cliente: 002811
+Produto Final: CELROB000108A e CELROB000109A  
+Componente: 155793-4 e 155794-1
+
+PMS000211C
+
+SELECT * FROM AFM010 WHERE AFM_PROJET = 'PMS005812A' AND D_E_L_E_T_ = ' ';
+
+SELECT TOP 20 * FROM AF8010 ORDER BY R_E_C_N_O_  DESC;
+
+SELECT * FROM AFC010 WHERE AFC_XPROD = 'CELROB000111A';
+
+SELECT AFA_PRODUT FROM AFA010 WHERE AFA_PROJET = 'PMS000111A' AND AFA_XESTRU = 'S' AND D_E_L_E_T_ = ' ';
+
+select *
+  from AFC010 
+ where AFC_PROJET IN ('PMS000111A','PMS000111B') and D_E_L_E_T_ = ' ';
+
+select *
+  from AFA010 
+ where AFA_PROJET IN ('PMS000111A','PMS000111B') and D_E_L_E_T_ = ' ' AND AFA_XESTRU = 'S'
+ ORDER BY AFA_FILIAL,AFA_PROJET,AFA_REVISA,AFA_TAREFA,AFA_ITEM;
+ 
+select *
+  from AFM010 
+ where AFM_PROJET IN ('PMS000111A','PMS000111B') and D_E_L_E_T_ = ' '
+ ORDER BY AFM_FILIAL,AFM_PROJET,AFM_REVISA,AFM_TAREFA;

@@ -1,0 +1,55 @@
+--  Livro Fiscal - Notas de Serviço
+SELECT *
+  FROM SFT010 
+ WHERE D_E_L_E_T_ = ' ' and FT_ENTRADA between '20120101' and '20120131' 
+   AND (FT_SERIE = 'A' OR FT_ESPECIE IN ('NFPS', 'NFS', 'RPS'));
+
+-- Prestados
+SELECT * FROM SF2010 
+ WHERE D_E_L_E_T_ = ' ' AND F2_SERIE = 'A' 
+   AND F2_EMISSAO BETWEEN '20120101' and '20120131' 
+ ORDER BY F2_DOC;
+ 
+-- Tomados
+SELECT * FROM SF1010 
+ WHERE D_E_L_E_T_ = ' ' AND F1_ESPECIE = 'NFS' 
+   AND F1_DTDIGIT BETWEEN '20120101' and '20120131' 
+ ORDER BY F1_DOC;
+ 
+-- Exemplo
+SELECT * FROM SFT010 WHERE FT_NFISCAL = '607848712';
+
+-- Ajuste da Série e tipo de crédito - 01/2012
+UPDATE SFT010 
+   SET FT_ESPECIE = 'NFS', FT_CODBCC = '03'
+ WHERE D_E_L_E_T_ = ' ' and FT_ENTRADA between '20120101' and '20120131' 
+   AND (FT_SERIE = 'A' OR FT_ESPECIE = 'NFS');
+
+-- Ajuste da Série e tipo de crédito - 02/2012
+SELECT FT_CODBCC, FT_ESPECIE, * FROM SFT010 
+ WHERE D_E_L_E_T_ = ' ' and FT_ENTRADA between '20120201' and '20120229'
+   AND (FT_SERIE = 'A' OR FT_ESPECIE = 'NFS');
+   
+UPDATE SFT010 
+   SET FT_ESPECIE = 'NFS', FT_CODBCC = '03'
+ WHERE D_E_L_E_T_ = ' ' and FT_ENTRADA between '20120201' and '20120229' 
+   AND (FT_SERIE = 'A' OR FT_ESPECIE = 'NFS');
+   
+-- 03/2012
+SELECT FT_CODBCC, FT_ESPECIE, * FROM SFT010 
+ WHERE D_E_L_E_T_ = ' ' and FT_ENTRADA between '20120301' and '20120331'
+   AND (FT_SERIE = 'A' OR FT_ESPECIE = 'NFS');
+
+UPDATE SFT010 
+   SET FT_CODBCC = '03'
+ WHERE D_E_L_E_T_ = ' ' and FT_ENTRADA between '20120301' and '20120331'
+   AND (FT_SERIE = 'A' OR FT_ESPECIE = 'NFS');
+
+-- Tributação do PIS
+SELECT * FROM SN1010 WHERE N1_CALCPIS = '1' AND N1_CSTPIS = '  ';
+
+-- Atributo por bem
+update SN1010 
+   set N1_ORIGCRD = '1', N1_CSTPIS = '50', N1_CSTCOFI = '50', 
+       N1_ALIQPIS = 1.65, N1_ALIQCOF = 7.6, N1_CODBCC = '10'
+ where N1_CALCPIS = '1' AND N1_CSTPIS = '  ' AND N1_MESCPIS > 0;

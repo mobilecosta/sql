@@ -1,0 +1,2 @@
+-- Pedidos com Projeto Informado
+SELECT C5_XVLACO, C5_XPROJET , C5_XTSKPMS, * FROM SC5010 WHERE C5_XPROJET <> ''

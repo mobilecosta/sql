@@ -1,0 +1,51 @@
+Eu utilizo Protheus 10 com Oracle 11.2.0.1 e DbAccess 4.2 Build 20110919, sem problemas.
+
+Observe o seguinte, você tem que usar o DbAccess de acordo com a versão do sistema operacional, ou seja, se for de 64 bits só vai funcionar com o DbAccess de 64 bits, e vice versa para 32 bits.
+
+Isso ocorre pela forma como o DbAccess carrega a OCI do Oracle.
+
+Configure também o DbAccess.ini apontando o caminho da OCI.DLL, exemplo:
+
+[ORACLE]
+ClientLibrary=D:\Oracle\app\product\11.2.0\db11g\BIN\OCI.DLL
+
+E por fim tenha a certeza de configurar a variavel de ambiente TNS_ADMIN como exemplo no Windows como variavel global:
+
+TNS_ADMIN = D:\Oracle\app\product\11.2.0\db11g\NETWORK\ADMIN
+
+Este é o caminho onde está o seu arquivo tnsnames.ora e ele também deve estar devidamente configurado com o SID do seu banco como exemplo:
+
+PADRAO10 =
+(DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.0.1)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = PADRAO10)
+    )
+)
+
+Neste caso o SID do meu banco é PADRAO10.
+
+Na maioria das vezes a configuração não funciona pela falta da definição do TNS_ADMIN ou incompatilibidade da versão DbAccess (usa a versão 32 bits com banco de 64 bits, resultando não carrega a OCI.DLL de 64 bits).
+
+Att,
+
+Ylram Mariani
+
+http://adrianoangelo.blogspot.com.br/2012/03/estrutura-de-memoria-oracle-para.html
+
+http://toolkit.rdbms-insight.com/gen_cre_ts.php
+
+http://www.lucianosilva.com/2008/06/15/criando-um-banco-de-dados-oracle-manualmente-no-windows/
+
+http://oraclewoman.wordpress.com/2012/06/08/criando-um-banco-de-dados-oracle-10g-manualmente-windows/
+
+http://profissionaloracle.com.br/blogs/rodrigoalmeida/tag/drop-database/
+
+http://www.adp-gmbh.ch/ora/admin/creatingdbmanually.html
+
+http://profissionaloracle.com.br/blogs/rodrigoalmeida/2009/02/27/criando-um-banco-de-dados-10g-manualmente-no-linux/
+
+http://www.vivaolinux.com.br/dica/Aumentando-TABLESPACES-no-Oracle
+
+https://docs.google.com/file/d/0B701c6-vyPrbR0V0dXFqX0ZSQ00/edit?pli=1

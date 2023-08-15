@@ -1,0 +1,7 @@
+0) set oracle_sid=dev
+1) sqlplus /nolog
+2) connect sys/sys as sysdba
+3) shutdown immediate;
+4) startup mount restrict pfile=D:\oracle\product\10.2.0\admin\DEV\pfile\init.ora;
+5) drop database;
+6) oradim -delete -sid DEV

@@ -1,0 +1,9 @@
+-- Notas Fiscais Importadas
+SELECT ISNULL(CONVERT(VARCHAR(1024),CONVERT(VARBINARY(1024),ZN_XML)),'') AS ZN_XML, * 
+  FROM SZN010;
+
+-- Itens Notas Fiscais Importadas
+SELECT * FROM SZO010;
+
+-- Duplicatas
+SELECT * FROM SZP010;
